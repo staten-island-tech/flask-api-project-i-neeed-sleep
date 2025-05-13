@@ -36,7 +36,8 @@ def index():
         else:
             r = ""
         
-        spells.append({
+        spells.append 
+        ({
             'name': spell['name'].capitalize(),
             'lvl': spell['level'],
             'school': school.capitalize(),
@@ -46,22 +47,29 @@ def index():
             'id' = id
         })
 
-    render_template("index.html", spells=spells)
+    render_template("home.html", spells=spells)
 
 @app.route("/spell-details/<id>")
 def spell_detail(id):
     response = requests.get(f"https://api.open5e.com/v2/spells/{id}")
     data = response.json()
     
-    types = [t['type']['name'] for t in data['types']]
+    name = data.get('name').capitalize()
     duration = data.get('duration')
     target = data.get('target_type')
     desc = data.get('desc')
-    school = data.get('school')
-    name = data.get('name').capitalize()
-    
-    stat_names = [stat['stat']['name'] for stat in data['stats']]
-    stat_values = [stat['base_stat'] for stat in data['stats']]
+    distance = data.get('range_text')
+
+    save_throw = data.get('saving_throw_ability')
+
+    if data["attack_roll"] == True:
+        dmg_roll = data.get('')
+    else:
+        dmg_roll = "[This spell is not offensive]"
+
+    sc = data.get('school')
+    parts = sc.strip("/").split("/")
+    school = parts[-1]
     
     req = []
 
@@ -84,15 +92,17 @@ def spell_detail(id):
 
     render_template("spell.html", spell={
         'name': name,
-        'desc': desc,
         'target': target,
         'duration': duration,
         'lvl': data['level'],
         'school': school.capitalize(),
         'req' : req,
+        'range': distance,
         'concentration': c,
         'ritual' : r,
-        'desc': desc,
+        'save_throw': save_throw,
+        'dmg_roll':dmg_roll,
+        'desc': desc
     })
 
 if __name__ == '__main__':
