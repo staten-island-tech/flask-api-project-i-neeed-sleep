@@ -29,25 +29,24 @@ def index():
         if spell["concentration"] == True:
             c = "Concentration"
         else:
-            c = ""
+            c = "-"
         
         if spell["ritual"] == True:
             r = "Ritual"
         else:
-            r = ""
+            r = "-"
         
-        spells.append 
-        ({
+        spells.append({
             'name': spell['name'].capitalize(),
+            'id': id,
             'lvl': spell['level'],
             'school': school.capitalize(),
             'req' : req,
-            'concentration': c
+            'concentration': c,
             'ritual' : r
-            'id' = id
         })
 
-    render_template("home.html", spells=spells)
+    return render_template("home.html", spells=spells)
 
 @app.route("/spell-details/<id>")
 def spell_detail(id):
@@ -90,7 +89,7 @@ def spell_detail(id):
     else:
         r = ""
 
-    render_template("spell.html", spell={
+    return render_template("spell.html", spell={
         'name': name,
         'target': target,
         'duration': duration,
