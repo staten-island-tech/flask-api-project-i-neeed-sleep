@@ -21,9 +21,9 @@
                 <div class="card-body">
                     <h5 class="card-title">{{spell.name}}</h5>
                     <p class="card-text">
-                        Level: {{spell.lvl}} \n
-                        School: {{spell.school}} \n
-                        Requirements: {{spell.req}} \n
+                        Level: {{spell.lvl}} <br>
+                        School: {{spell.school}} <br>
+                        Requirements: {{spell.req}} <br>
                         {{spell.concentration}}{{spell.ritual}} 
                     </p>
                     <a href="{{ url_for('spell_detail', id=spell.id)}}" class="btn btn-primary">Spell Details</a>

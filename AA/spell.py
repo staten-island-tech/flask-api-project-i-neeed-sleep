@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 @app.route("/")
-def index():
+def home():
     response = requests.get("https://api.open5e.com/v2/spells/")
     data = response.json()
     spell_list = data['results']
@@ -15,6 +15,8 @@ def index():
         url = spell['school']
         parts = url.strip("/").split("/")
         school = parts[-1]
+
+        url = spell['url']
         part = url.strip("/").split("/")
         id = part[-1]
         req = []
@@ -29,12 +31,12 @@ def index():
         if spell["concentration"] == True:
             c = "Concentration"
         else:
-            c = "-"
+            c = ""
         
         if spell["ritual"] == True:
             r = "Ritual"
         else:
-            r = "-"
+            r = ""
         
         spells.append({
             'name': spell['name'].capitalize(),
@@ -53,7 +55,7 @@ def spell_detail(id):
     response = requests.get(f"https://api.open5e.com/v2/spells/{id}")
     data = response.json()
     
-    name = data.get('name').capitalize()
+    name = data.get('name')
     duration = data.get('duration')
     target = data.get('target_type')
     desc = data.get('desc')
@@ -61,45 +63,54 @@ def spell_detail(id):
 
     save_throw = data.get('saving_throw_ability')
 
-    if data["attack_roll"] == True:
+    attack_roll = data.get('attack_roll')
+
+    if attack_roll == 'true':
         dmg_roll = data.get('')
     else:
         dmg_roll = "[This spell is not offensive]"
 
-    sc = data.get('school')
-    parts = sc.strip("/").split("/")
+    url = data.get('school')
+    parts = url.strip("/").split("/")
     school = parts[-1]
     
     req = []
 
-    if data["material"] == True:
+    material = data.get('material')
+    somatic = data.get('somatic')
+    verbal = data.get('verbal')
+
+    if material == True:
         req.append("M")
-    if data["somatic"] == True:
+    if somatic == True:
         req.append("S")
-    if data["verbal"] == True:
+    if verbal == True:
         req.append("V")
 
-    if data["concentration"] == True:
+    concentration = data.get('concentration')
+    ritual = data.get('ritual')
+
+    if concentration == True:
         c = "Concentration"
     else:
         c = ""
-    
-    if data["ritual"] == True:
+    if ritual == True:
         r = "Ritual"
     else:
         r = ""
 
     return render_template("spell.html", spell={
         'name': name,
-        'target': target,
+        'target': target.capitalize(),
         'duration': duration,
-        'lvl': data['level'],
+        'lvl': data.get('level'),
+        'higher_level': data.get('higher_level'),
         'school': school.capitalize(),
         'req' : req,
         'range': distance,
         'concentration': c,
         'ritual' : r,
-        'save_throw': save_throw,
+        'save_throw': save_throw.capitalize(),
         'dmg_roll':dmg_roll,
         'desc': desc
     })
