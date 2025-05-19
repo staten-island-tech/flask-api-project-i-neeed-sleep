@@ -5,7 +5,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    response = requests.get("https://api.open5e.com/v2/spells/")
+    response = [requests.get("https://api.open5e.com/v2/spells/")]
+
     data = response.json()
     spell_list = data['results']
     
@@ -48,11 +49,11 @@ def home():
             'ritual' : r
         })
 
-    return render_template("home.html", spells=spells)
+    return render_template("home.html", spells=spells) 
 
 @app.route("/spell-details/<id>")
 def spell_detail(id):
-    response = requests.get(f"https://api.open5e.com/v2/spells/{id}")
+    response = requests.get(f"https://api.open5e.com/v2/spells/{id}") 
     data = response.json()
     
     name = data.get('name')
@@ -62,11 +63,15 @@ def spell_detail(id):
     distance = data.get('range_text')
 
     save_throw = data.get('saving_throw_ability')
+    if save_throw == "":
+        save_throw = "N/A"
+    else:
+        save_throw = save_throw.capitalize()
 
     attack_roll = data.get('attack_roll')
 
-    if attack_roll == 'true':
-        dmg_roll = data.get('')
+    if attack_roll == True:
+        dmg_roll = data.get('damage_roll')
     else:
         dmg_roll = "[This spell is not offensive]"
 
@@ -110,7 +115,7 @@ def spell_detail(id):
         'range': distance,
         'concentration': c,
         'ritual' : r,
-        'save_throw': save_throw.capitalize(),
+        'save_throw': save_throw,
         'dmg_roll':dmg_roll,
         'desc': desc
     })
