@@ -5,8 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    response = [requests.get("https://api.open5e.com/v2/spells/")]
-
+    response = requests.get("https://api.open5e.com/v2/spells/")
     data = response.json()
     spell_list = data['results']
     
