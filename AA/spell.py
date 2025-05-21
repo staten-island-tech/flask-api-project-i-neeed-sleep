@@ -6,8 +6,12 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     response = requests.get("https://api.open5e.com/v2/spells/")
-    data = response.json()
-    spell_list = data['results']
+    try:
+        data = response.json()
+    except:
+        spell_list = ['N/A']
+    else:
+        spell_list = data['results']
     
     spells = []
     
@@ -39,7 +43,7 @@ def home():
             r = ""
         
         spells.append({
-            'name': spell['name'].capitalize(),
+            'name': spell['name'],
             'id': id,
             'lvl': spell['level'],
             'school': school.capitalize(),
@@ -49,6 +53,14 @@ def home():
         })
 
     return render_template("home.html", spells=spells) 
+
+@app.route("/ritual")
+
+
+
+@app.route("/concentration")
+
+
 
 @app.route("/spell-details/<id>")
 def spell_detail(id):
