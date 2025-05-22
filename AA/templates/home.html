@@ -16,32 +16,33 @@
     </nav>
 
     <div class="dropdown">
-        <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          All Spells
-        </a>
-      
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="{{  url_for('ritual')  }}">Ritual</a></li>
-          <li><a class="dropdown-item" href="{{  url_for('concentration')  }}">Concentration</a></li>
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            All Spells
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="{{  url_for('ritual')  }}">Ritual</a></li>
+            <li><a class="dropdown-item" href="{{  url_for('concentration')  }}">Concentration</a></li>
         </ul>
     </div>
 
-    <div class="ee">
-        {% for spell in spells %}
-            <div class="card text-bg-dark mb-3" style="width: 18rem;">
-                <div class="card-body text-light">
-                    <h5 class="card-title">{{spell.name}}</h5>
-                    <p class="card-text">
-                        Level: {{spell.lvl}} <br>
-                        School: {{spell.school}} <br>
-                        Requirements: {{spell.req}} <br>
-                        {{spell.concentration}}{{spell.ritual}} 
-                    </p>
-                    <a href="{{ url_for('spell_detail', id=spell.id)}}" class="btn btn-info">Spell Details</a>
-                </div>
+    <br>
+
+
+    {% for spell in spells %}
+        <div class="card text-bg-dark mb-3" style="width: 18rem;">
+            <div class="card-body text-light">
+                <h5 class="card-title">{{spell.name}}</h5>
+                <p class="card-text">
+                    Level: {{spell.lvl}} <br>
+                    School: {{spell.school}} <br>
+                    Requirements: {{spell.req}} <br>
+                    {{spell.concentration}}{{spell.ritual}} 
+                </p>
+                <a href="{{ url_for('spell_detail', id=spell.id)}}" class="btn btn-info">Spell Details</a>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+    {% endfor %}
+
 
 </body>
 </html>

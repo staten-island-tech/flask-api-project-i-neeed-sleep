@@ -55,11 +55,103 @@ def home():
     return render_template("home.html", spells=spells) 
 
 @app.route("/ritual")
+def ritual():
+    response = requests.get("https://api.open5e.com/v2/spells/")
+    try:
+        data = response.json()
+    except:
+        spell_list = ['N/A']
+    else:
+        spell_list = data['results']
+    
+    spells = []
 
+    for spell in spell_list:
+        if spell["ritual"] == True:
+            r = "Ritual"
+
+            url = spell['school']
+            parts = url.strip("/").split("/")
+            school = parts[-1]
+
+            url = spell['url']
+            part = url.strip("/").split("/")
+            id = part[-1]
+            req = []
+
+            if spell["material"] == True:
+                req.append("M")
+            if spell["somatic"] == True:
+                req.append("S")
+            if spell["verbal"] == True:
+                req.append("V")
+
+            if spell["concentration"] == True:
+                c = "Concentration"
+            else:
+                c = ""
+            
+            spells.append({
+                'name': spell['name'],
+                'id': id,
+                'lvl': spell['level'],
+                'school': school.capitalize(),
+                'req' : req,
+                'concentration': c,
+                'ritual' : r
+            })
+
+    return render_template("ritual.html", spells=spells) 
 
 
 @app.route("/concentration")
+def concentration():
+    response = requests.get("https://api.open5e.com/v2/spells/")
+    try:
+        data = response.json()
+    except:
+        spell_list = ['N/A']
+    else:
+        spell_list = data['results']
+    
+    spells = []
 
+    for spell in spell_list:
+        if spell["concentration"] == True:
+            c = "Concentration"
+
+            url = spell['school']
+            parts = url.strip("/").split("/")
+            school = parts[-1]
+
+            url = spell['url']
+            part = url.strip("/").split("/")
+            id = part[-1]
+            req = []
+
+            if spell["material"] == True:
+                req.append("M")
+            if spell["somatic"] == True:
+                req.append("S")
+            if spell["verbal"] == True:
+                req.append("V")
+
+            if spell["ritual"] == True:
+                r = "Ritual"
+            else:
+                r = ""
+
+            spells.append({
+                'name': spell['name'],
+                'id': id,
+                'lvl': spell['level'],
+                'school': school.capitalize(),
+                'req' : req,
+                'concentration': c,
+                'ritual' : r
+            })
+
+    return render_template("concentration.html", spells=spells) 
 
 
 @app.route("/spell-details/<id>")
